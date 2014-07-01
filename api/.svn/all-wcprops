@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/!svn/ver/12062/wxtiles/branches/v2/api
+END
+build.py
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/!svn/ver/11847/wxtiles/branches/v2/api/build.py
+END
+wxtiles.js
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/!svn/ver/12705/wxtiles/branches/v2/api/wxtiles.js
+END
+jsapi.php
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/!svn/ver/11847/wxtiles/branches/v2/api/jsapi.php
+END
+wxtiles.min.js
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/11847/wxtiles/branches/v2/api/wxtiles.min.js
+END
+wxtiles.cfg
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/!svn/ver/11847/wxtiles/branches/v2/api/wxtiles.cfg
+END
