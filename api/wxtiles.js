@@ -13,7 +13,7 @@ if (_WXROOTURL == "") _WXROOTURL="http://www.wxtiles.com";
 
 var gsMonthNames = new Array('January','February','March','April','May','June','July','August','September','October','November','December');
 var gsDayNames = new Array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
-Date.prototype.format = function(f)
+Date.prototype.wxtilesformat = function(f)
 {
     if (!this.valueOf())
         return '&nbsp;';
@@ -120,7 +120,6 @@ _WXTiles = {
 */
   autoupdate: true,
   isinit: false,
-  callback: 'init',
   hidden: false,
   ext: '.png',
   tselect: null,
@@ -164,6 +163,7 @@ _WXTiles = {
     this._srv=this._url;
     this._serverlist={};
     this.lastinit=new Date();
+    this.callback='init'+this.lastinit.valueOf();
     if (this.autoupdate){
         var inst=this;
         setInterval(function(){inst._loadinit()},600000);
@@ -556,7 +556,7 @@ _WXTiles = {
 	    }
         }else{
             var nd=new Date(t+this.toff*3600000);
-            var jstime=nd.format(format);
+            var jstime=nd.wxtilesformat(format);
         }
         this.tselect.options[this.tselect.options.length] = new Option(jstime,t,(t==this.ctime),(t==this.ctime));
     }
