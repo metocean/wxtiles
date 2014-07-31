@@ -18,7 +18,7 @@ except ImportError:
 
 sourceDirectory = "."
 configFilename = "wxtiles.cfg"
-outputFilename = "wxtiles.min.js"
+outputFilename = "wxtiles.v2.min.js"
 
 if len(sys.argv) > 1:
     configFilename = sys.argv[1]

@@ -13,7 +13,7 @@ if (_WXROOTURL == "") _WXROOTURL="http://www.wxtiles.com";
 
 var gsMonthNames = new Array('January','February','March','April','May','June','July','August','September','October','November','December');
 var gsDayNames = new Array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
-Date.prototype.wxtilesformat = function(f)
+Date.prototype.format = function(f)
 {
     if (!this.valueOf())
         return '&nbsp;';
@@ -25,17 +25,18 @@ Date.prototype.wxtilesformat = function(f)
             {
             case '%Y': return d.getFullYear();
             case '%y': return d.getFullYear().substr(2,2);
-            case '%B': return gsMonthNames[d.getMonth()];
-            case '%b':  return gsMonthNames[d.getMonth()].substr(0, 3);
-            case '%m':   return zer0(d.getMonth() + 1);
-            case '%A':  return gsDayNames[d.getDay()];
-            case '%a':  return gsDayNames[d.getDay()].substr(0, 3);
-            case '%d':   return zer0(d.getDate());
-            case '%e':   return d.getDate();
-            case '%H':   return zer0(((h = d.getHours() % 12) ? h : 12));
-            case '%M':   return zer0(d.getMinutes());
-            case '%S':   return zer0(d.getSeconds());
-            case '%p':  return d.getHours() < 12 ? 'a' : 'p';
+            case '%B': return gsMonthNames[d.getUTCMonth()];
+            case '%b': return gsMonthNames[d.getUTCMonth()].substr(0, 3);
+            case '%m': return zer0(d.getUTCMonth() + 1);
+            case '%A': return gsDayNames[d.getUTCDay()];
+            case '%a': return gsDayNames[d.getUTCDay()].substr(0, 3);
+            case '%d': return zer0(d.getUTCDate());
+            case '%e': return d.getUTCDate();
+            case '%h': return zer0(((h = d.getUTCHours() % 12) ? h : 12));
+            case '%H': return zer0(d.getUTCHours());
+            case '%M': return zer0(d.getUTCMinutes());
+            case '%S': return zer0(d.getSeconds());
+            case '%p': return d.getUTCHours() < 12 ? 'a' : 'p';
             }
         }
     );
@@ -158,10 +159,9 @@ _WXTiles = {
 	      Any property value can be specified as an option.
 */
   initialize: function(options) {
-    this._url=_WXROOTURL+'/../ajr';
+    this._url=_WXROOTURL;
     extendTo(this,options);
     this._srv=this._url;
-    this._serverlist={};
     this.lastinit=new Date();
     this.callback='init'+this.lastinit.valueOf();
     if (this.autoupdate){
@@ -197,18 +197,38 @@ _WXTiles = {
     document.body.appendChild(script);
     /**/
   },
-  _init: function(data){
+  _init: function(datalist){
     if (!this.isinit){
-	this.cycle=data.cycle;
-	this.views=data.views;
-	this.times=data.times;
+      if (!(datalist instanceof Array)) {
+        datalist=[datalist];
+      }
+      this._serverlist={};
+      this._cyclelist={};
+      this.views={};
+      this.times={};
+      this.defalpha={};
+      this._timekey={};
+      for (i=0;i<datalist.length;i++) {
+        var data=datalist[i];
+	  for (a in data.views) this.views[a]=data.views[a];
+	  for (a in data.times) this.times[a]=data.times[a];
+	  if (data.defalpha) {
+          for (a in data.defalpha) this.defalpha[a]=data.defalpha[a];
+        }
+	  if (data.timekey) {
+          for (a in data.timekey) this._timekey[a]=data.timekey[a];
+        }
+        var server= (data.server) ? data.server : this._url;
+        for (v in data.views) {
+            this._serverlist[v]=server;
+            this._cyclelist[v]=data.cycle;
+        }
+      }
       for (v in this.times) {
         for (i=0;i<this.times[v].length;i++){
           this.times[v][i]=new Date(this.times[v][i]+' UTC').valueOf();
         }
       }
-	if (data.defalpha) this.defalpha=data.defalpha;
-	if (data.timekey) this._timekey=data.timekey;
 	this.getTimes();
 	if (!this.vorder.length) {
 	    this.vorder=Object.keys(this.views);
@@ -217,24 +237,24 @@ _WXTiles = {
 	    this.views['none']='None';
 	    this.times['none']=[];
 	    this.alpha['none']=0;
-	    if (this.vorder.indexOf && this.vorder.indexOf('none')<0) this.vorder=['none'].concat(this.vorder)
-	}
-	if (!this.views[this.cview]) {
-	    for (var i=0;i<this.vorder.length;i++){
-		if (this.views[this.vorder[i]]){
-		    this.cview=this.vorder[i];
-		    break;
-		}
-	    }
-	}
+          if (this.vorder.indexOf && this.vorder.indexOf('none')<0) this.vorder=['none'].concat(this.vorder)
+      }
+      if (!this.views[this.cview]) {
+          for (var i=0;i<this.vorder.length;i++){
+            if (this.views[this.vorder[i]]){
+                this.cview=this.vorder[i];
+                break;
+            }
+          }
+      }
       this._makeVSelect(this.vorder);
-	this.setView(this.cview);
-	if (this.getTimes(false,true).indexOf(this.ctime)<0) this.ctime=false;
-	this.setTime(this.ctime);
+      this.setView(this.cview);
+      if (this.getTimes(false,true).indexOf(this.ctime)<0) this.ctime=false;
+      this.setTime(this.ctime);
       this._makeTSelect();
-	this.isinit=true;
-	this.lastinit=new Date();
-	if (this.updateCallback) this.updateCallback.apply(this);
+      this.isinit=true;
+      this.lastinit=new Date();
+      if (this.updateCallback) this.updateCallback.apply(this);
     }
   },
   _updateOpacity:function(){
@@ -261,14 +281,10 @@ _WXTiles = {
   },
   _setURL: function(){
     var v=this.cview;
-    var z=this._getZoom();
     for (s in this._serverlist){
-        var bits=s.split('_');
-        if (bits[0]=='*' | bits[0]==v){
-            if (bits[1]=='*' | bits[1]==z){
-                this._srv=this._serverlist[s];
-                return;
-            }
+        if (v==s) {
+            this._srv=this._serverlist[s];
+            return;
         }
     }
   },
@@ -405,8 +421,8 @@ _WXTiles = {
     this.alltimes.sort();
     return (aview) ? this.times[aview] : this.alltimes;
   },
-  getCycle: function(){
-    return this.cycle;
+  getCycle: function(v){
+    return this._cyclelist[v];
   },
   /*
   Method: getViews
@@ -464,16 +480,15 @@ _WXTiles = {
           if (this.alltimes[i]>=newtime) {
             newtime=this.alltimes[i];
             break;
-          }
+          }  
         }
+        if (i==this.alltimes.length) newtime=this.alltimes[i-1];
         this.ctime=newtime;
-        if (i<this.alltimes.length){
-            if (this.ctime<0){
-                this.strtime='.';    
-            }else{
-                var newdate=new Date(this.ctime);
-                this.strtime=''+newdate.getUTCFullYear()+zer0(newdate.getUTCMonth()+1)+zer0(newdate.getUTCDate())+'_'+zer0(newdate.getUTCHours())+'z';
-            }
+        if (this.ctime<0){
+            this.strtime='.';    
+        }else{
+            var newdate=new Date(this.ctime);
+            this.strtime=newdate.format('%Y%m%d_%Hz');
         }
     }
     if (this.linklayers && !_linked) {
@@ -556,7 +571,7 @@ _WXTiles = {
 	    }
         }else{
             var nd=new Date(t+this.toff*3600000);
-            var jstime=nd.wxtilesformat(format);
+            var jstime=nd.format(format);
         }
         this.tselect.options[this.tselect.options.length] = new Option(jstime,t,(t==this.ctime),(t==this.ctime));
     }
@@ -729,7 +744,7 @@ if (typeof(OpenLayers)!="undefined"){
               var zmod=Math.pow(2,z);
               x=((x%zmod)+zmod)%zmod;
               var y = Math.round((bounds.bottom - this.tileOrigin.lat) / (res * this.tileSize.h));
-                 return this._srv+'/tile/'+this.cycle+"/"+this.cview+"/"+this.strtime+"/"+z + "/" + x + "/" + y + this.ext;
+                 return this._srv+'/tile/'+this._cyclelist[this.cview]+"/"+this.cview+"/"+this.strtime+"/"+z + "/" + x + "/" + y + this.ext;
             } else {
               return this.url+"none.png";
             }
@@ -846,7 +861,7 @@ else if (typeof(google)!="undefined"){
                 //convert google tile format into server format
                 var zmod=Math.pow(2,z);
                 var y=zmod-1-pos.y
-                return this._srv+'/tile/'+this.cycle+"/"+this.cview+"/"+this.strtime+"/"+z + "/" + x + "/" + y + this.ext;
+                return this._srv+'/tile/'+this._cyclelist[this.cview]+"/"+this.cview+"/"+this.strtime+"/"+z + "/" + x + "/" + y + this.ext;
             } else {
               return this.url+"none.png";
             }
