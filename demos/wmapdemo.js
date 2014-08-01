@@ -89,7 +89,7 @@ function loadTimes() {
 
 function getJSTime(t) {
     var nd=new Date(t);
-    return datedays[nd.getDay()]+' '+nd.getDate()+' '+datemonths[nd.getMonth()]+' '+zer0(nd.getHours())+':'+zer0(nd.getMinutes());
+    return nd.format('%A %d %b %H:%M');
 }
 
 /*
