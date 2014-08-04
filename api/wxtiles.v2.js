@@ -226,7 +226,7 @@ _WXTiles = {
       }
       for (v in this.times) {
         for (i=0;i<this.times[v].length;i++){
-          this.times[v][i]=new Date(this.times[v][i]+' UTC').valueOf();
+          this.times[v][i]=new Date(this.times[v][i].replace(' ','T')+'Z').valueOf();
         }
       }
 	this.getTimes();
