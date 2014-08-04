@@ -218,7 +218,7 @@ _WXTiles = {
 	  if (data.timekey) {
           for (a in data.timekey) this._timekey[a]=data.timekey[a];
         }
-        var server= (data.server) ? data.server : this._url;
+        var server= ((data.server) ? data.server : this._url).replace(/\/$/g, "");
         for (v in data.views) {
             this._serverlist[v]=server;
             this._cyclelist[v]=data.cycle;
@@ -477,12 +477,11 @@ _WXTiles = {
         this.ctime=strtime;
     }else{
         for (var i=0;i<this.alltimes.length;i++){
-          if (this.alltimes[i]>=newtime) {
+          if (this.alltimes[i+1]>newtime) {
             newtime=this.alltimes[i];
             break;
           }  
         }
-        if (i==this.alltimes.length) newtime=this.alltimes[i-1];
         this.ctime=newtime;
         if (this.ctime<0){
             this.strtime='.';    
