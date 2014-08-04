@@ -7,7 +7,6 @@ Version: 2.0
 var init=null;
 
 var t = document.getElementsByTagName("script");
-var _WXROOTURL=t[t.length-1].src.replace(/\\/g, '/').replace(/\/[^\/]*\/?$/, '');
 if (_WXROOTURL == "") _WXROOTURL="http://www.wxtiles.com";
 
 
