@@ -7,7 +7,7 @@ Version: 2.0
 var init=null;
 
 var t = document.getElementsByTagName("script");
-if (_WXROOTURL == "") _WXROOTURL="http://www.wxtiles.com";
+var _WXROOTURL="http://www.wxtiles.com";
 
 
 var gsMonthNames = new Array('January','February','March','April','May','June','July','August','September','October','November','December');
