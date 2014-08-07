@@ -225,7 +225,10 @@ _WXTiles = {
       }
       for (v in this.times) {
         for (i=0;i<this.times[v].length;i++){
-          this.times[v][i]=new Date(this.times[v][i].replace(' ','T')+'Z').valueOf();
+          var timestamp=this.times[v][i];
+          if (!this._timekey[timestamp]) {
+            this.times[v][i]=new Date(timestamp.replace(' ','T')+'Z').valueOf();
+          }
         }
       }
 	this.getTimes();
@@ -258,7 +261,7 @@ _WXTiles = {
   },
   _updateOpacity:function(){
     opacity=this.alpha[this.cview];
-    this._setOpacity(opacity ? opacity : this.defalpha ? this.defalpha[this.cview] : 1.0);
+    this._setOpacity(opacity ? opacity : typeof(this.defalpha[this.cview])==='undefined' ? 1.0 : this.defalpha[this.cview]);
   },
   _update: function(){
     if (!this.times[this.cview]) {
