@@ -12,7 +12,7 @@ var _WXROOTURL="http://www.wxtiles.com";
 
 var gsMonthNames = new Array('January','February','March','April','May','June','July','August','September','October','November','December');
 var gsDayNames = new Array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
-Date.prototype.format = function(f)
+Date.prototype.wxformat = function(f)
 {
     if (!this.valueOf())
         return '&nbsp;';
@@ -489,7 +489,7 @@ _WXTiles = {
             this.strtime='.';    
         }else{
             var newdate=new Date(this.ctime);
-            this.strtime=newdate.format('%Y%m%d_%Hz');
+            this.strtime=newdate.wxformat('%Y%m%d_%Hz');
         }
     }
     if (this.linklayers && !_linked) {
@@ -572,7 +572,7 @@ _WXTiles = {
 	    }
         }else{
             var nd=new Date(t+this.toff*3600000);
-            var jstime=nd.format(format);
+            var jstime=nd.wxformat(format);
         }
         this.tselect.options[this.tselect.options.length] = new Option(jstime,t,(t==this.ctime),(t==this.ctime));
     }
