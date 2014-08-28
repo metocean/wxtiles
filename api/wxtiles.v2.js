@@ -485,8 +485,8 @@ _WXTiles = {
           }  
         }
         this.ctime=newtime;
-        if (this.ctime<0){
-            this.strtime='.';    
+        if (this.ctime<1000){
+            this.strtime=this.ctime;    //This allows arbitary time indices for timekey option. Pre 1970 dates will not work though!
         }else{
             var newdate=new Date(this.ctime);
             this.strtime=newdate.wxformat('%Y%m%d_%Hz');
