@@ -160,6 +160,7 @@ _WXTiles = {
   initialize: function(options) {
     this._url=_WXROOTURL;
     extendTo(this,options);
+    this._url=this._url.replace(/\/$/, "")
     this._srv=this._url;
     this.lastinit=new Date();
     this.callback='init'+this.lastinit.valueOf();
@@ -423,6 +424,27 @@ _WXTiles = {
     this.alltimes.sort();
     return (aview) ? this.times[aview] : this.alltimes;
   },
+  /*
+  Method: getTimeKeys
+     Get the time keys and their values for one or all forecast views
+      
+     Parameters:
+     aview {String/Boolean}	Get times for view aview. To get times for all, omit or set to false
+     link {Boolean}		nclude times from linked layers
+      
+     Returns:
+     {Object} A hash of key:value pairs
+     */
+  getTimeKeys: function(aview,_link){
+    var times=this.getTimes(aview,_link);
+    var timekeys={};
+    for (var it=0;it<times.length;it++) {
+        if (this._timekey[times[it]]) {
+            timekeys[times[it]]=this._timekey[times[it]];
+        }
+    }
+    return timekeys;
+  },
   getCycle: function(v){
     return this._cyclelist[v];
   },
@@ -485,7 +507,7 @@ _WXTiles = {
           }  
         }
         this.ctime=newtime;
-        if (this.ctime<1000){
+        if (typeof(this.ctime)=='string'){
             this.strtime=this.ctime;    //This allows arbitary time indices for timekey option. Pre 1970 dates will not work though!
         }else{
             var newdate=new Date(this.ctime);
@@ -551,7 +573,7 @@ _WXTiles = {
     })(this,this.setView);
     return this.vselect;
   },
-  _makeTSelect: function(format){
+  _makeTSelect: function(format,view){
     if (!this.tselect) {
         this.tselect=document.createElement('Select');
         this.tselect.setAttribute('name',this.id+'_tSelect');
@@ -561,10 +583,10 @@ _WXTiles = {
         format=this.tselect.format;
     }
     this.tselect.length=0;
-    var alltimes=this.getTimes(false,true);
+    var alltimes=this.getTimes(view,true);
     for (i=0;i<alltimes.length;i++){
         var t=alltimes[i];
-        if (typeof(t)=='string'){
+        if (typeof(t)=='string') {
 	    if (this._timekey[t]) {
 		var jstime=this._timekey[t];
 	    }else{
