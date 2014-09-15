@@ -790,7 +790,7 @@ if (typeof(OpenLayers)!="undefined"){
             maxExtent: new OpenLayers.Bounds(-20037509, -20037508.34, 20037508.34, 20037508.34)
             })
           map.addLayers([this]);
-	    if (map.getControlsByClass("OpenLayers.Control.Attribution").length==0){
+	    if (this._url==_WXROOTURL && this.map.getControlsByClass("OpenLayers.Control.Attribution").length==0){
 	      this.attrib=new OpenLayers.Control.Attribution();
 	      map.addControl(this.attrib);
 	      this.attrib.div.style.bottom="10px";
@@ -914,7 +914,7 @@ else if (typeof(google)!="undefined"){
             map.overlayMapTypes.push(this);
             this.index=map.overlayMapTypes.length-1;
             this.id='WXTiles_'+this.index
-            if (!this.map.has_wxtiles_attrib){
+            if (this._url==_WXROOTURL && !this.map.has_wxtiles_attrib){
               var attribution=document.createElement('DIV');
               attribution.innerHTML=this.attribution;
               attribution.id='wxtiles_attrib';
