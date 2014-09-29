@@ -101,7 +101,11 @@ domain = <span class="hljs-string">'metoceanview.com'</span></pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>wxtiles.loadConfiguration serverurl, domain, <span class="hljs-function"><span class="hljs-params">(config)</span> -&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>wxtiles.loadConfiguration serverurl, domain, <span class="hljs-function"><span class="hljs-params">(config)</span> -&gt;</span>
+	map = <span class="hljs-keyword">new</span> L.Map <span class="hljs-string">'map'</span>,
+		<span class="hljs-attribute">center</span>: <span class="hljs-keyword">new</span> L.LatLng -<span class="hljs-number">37.7772</span>, <span class="hljs-number">175.2756</span>
+		<span class="hljs-attribute">zoom</span>: <span class="hljs-number">6</span>
+		<span class="hljs-attribute">attributionControl</span>: <span class="hljs-literal">no</span></pre></div></div>
             
         </li>
         
@@ -112,14 +116,16 @@ domain = <span class="hljs-string">'metoceanview.com'</span></pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>We create the wxTileLayer. Our high quality tiles are available to zoom level 14 and our open tiles are available to zoom level 7.</p>
+              <p>We’re creating a layer for each field.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	wxTilesLayer = L.wxTileLayer config,
-		<span class="hljs-attribute">maxZoom</span>: <span class="hljs-number">7</span>
-		<span class="hljs-attribute">maxNativeZoom</span>: <span class="hljs-number">8</span>
-		<span class="hljs-attribute">reuseTiles</span>: <span class="hljs-literal">yes</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>	overlays = {}
+	<span class="hljs-keyword">for</span> field <span class="hljs-keyword">in</span> config.fields
+		layer = L.wxTileLayer config,
+			<span class="hljs-attribute">maxZoom</span>: <span class="hljs-number">7</span>
+			<span class="hljs-attribute">maxNativeZoom</span>: <span class="hljs-number">8</span>
+			<span class="hljs-attribute">reuseTiles</span>: <span class="hljs-literal">yes</span></pre></div></div>
             
         </li>
         
@@ -134,6 +140,14 @@ domain = <span class="hljs-string">'metoceanview.com'</span></pre></div></div>
 
             </div>
             
+            <div class="content"><div class='highlight'><pre>		
+		layer.setField field
+		overlays[field.description] = layer
+
+	baselayer = L.tileLayer <span class="hljs-string">'http://map{s}.nzapstrike.net/aqua3/{z}/{x}/{y}.png'</span>,
+		<span class="hljs-attribute">maxZoom</span>: <span class="hljs-number">8</span>
+		<span class="hljs-attribute">reuseTiles</span>: <span class="hljs-literal">yes</span></pre></div></div>
+            
         </li>
         
         
@@ -143,12 +157,9 @@ domain = <span class="hljs-string">'metoceanview.com'</span></pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>For this example we are displaying a randomly selected field. Generally you would want to select the field that was relevant to your application.</p>
+              <p>detectRetina: yes</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>	randomindex = Math.floor Math.random() * config.fields.length
-	wxTilesLayer.setField config.fields[randomindex]</pre></div></div>
             
         </li>
         
@@ -159,62 +170,18 @@ domain = <span class="hljs-string">'metoceanview.com'</span></pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>We’re using an example ocean tile layer from nzapstrike, this could be OpenStreetMap, MapBox or any other base tile provider.</p>
+              <p>The minimap is used to turn layers on and off.
+It has been customised slightly to deal with the wxTileLayer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	nzapstrike = L.tileLayer <span class="hljs-string">'http://map{s}.nzapstrike.net/aqua3/{z}/{x}/{y}.png'</span>,
-		<span class="hljs-attribute">maxZoom</span>: <span class="hljs-number">8</span>
-		<span class="hljs-attribute">reuseTiles</span>: <span class="hljs-literal">yes</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>detectRetina: yes</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <p>Once we’ve created two tile layers we put them together and create a leaflet map centred over New Zealand.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>	map = <span class="hljs-keyword">new</span> L.Map <span class="hljs-string">'map'</span>,
-		<span class="hljs-attribute">layers</span>: [nzapstrike, wxTilesLayer]
-		<span class="hljs-attribute">center</span>: <span class="hljs-keyword">new</span> L.LatLng -<span class="hljs-number">37.7772</span>, <span class="hljs-number">175.2756</span>
-		<span class="hljs-attribute">zoom</span>: <span class="hljs-number">6</span>
-		<span class="hljs-attribute">attributionControl</span>: <span class="hljs-literal">no</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <p>We can dynamically update the key by calling back, forward or setting a key directly.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>	setTimeout <span class="hljs-function">-&gt;</span>
-		wxTilesLayer.forward()
-	, <span class="hljs-number">10000</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>	layersControl = L.control.layers
+		.minimap <span class="hljs-string">'Base Layer'</span>: baselayer, overlays,
+			<span class="hljs-attribute">collapsed</span>: <span class="hljs-literal">no</span>
+			<span class="hljs-attribute">overlayBackgroundLayer</span>: baselayer
+		.addTo map
+	
+	baselayer.addTo map</pre></div></div>
             
         </li>
         
