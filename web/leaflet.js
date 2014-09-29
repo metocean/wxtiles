@@ -22,15 +22,16 @@ wxtiles.loadConfiguration(serverurl, domain, function(config) {
   randomindex = Math.floor(Math.random() * config.fields.length);
   field = config.fields[randomindex];
   key = config.keys[Math.round(config.keys.length / 2)];
-  console.log("DISPLAYING " + field.description);
-  console.log("@ " + key.description);
+  console.log("DISPLAYING " + field.description + " @ " + key.description);
   exampleLayer = L.tileLayer("" + serverurl + "tile/" + config.cycle + "/" + field.name + "/" + key.name + "/{z}/{x}/{y}.png", {
     opacity: field.defaultalpha,
     maxZoom: 14,
-    tms: true
+    tms: true,
+    reuseTiles: true
   });
   nzapstrike = L.tileLayer('http://map{s}.nzapstrike.net/aqua3/{z}/{x}/{y}.png', {
-    maxZoom: 8
+    maxZoom: 8,
+    reuseTiles: true
   });
   return map = new L.Map('map', {
     layers: [nzapstrike, exampleLayer],
