@@ -12,7 +12,9 @@ L.WXTileLayer = L.TileLayer.extend({
     var initialkey, key, now, _i, _len, _ref;
     this._config = config;
     this.setField(this._config.fields[0], false);
-    if (this._config.keyistime) {
+    if (this._config.key != null) {
+      this.setKey(this._config.key);
+    } else if (this._config.keyistime) {
       now = new Date();
       initialkey = null;
       _ref = this._config.keys;
@@ -34,6 +36,7 @@ L.WXTileLayer = L.TileLayer.extend({
   },
   setKey: function(key, noRedraw) {
     this._key = key;
+    this._config.key = key;
     if ((noRedraw == null) || !noRedraw) {
       this.redraw();
     }

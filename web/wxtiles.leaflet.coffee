@@ -1,10 +1,11 @@
 L.WXTileLayer = L.TileLayer.extend
+	# Some options are automatically filled in as we know WXTiles only goes to zoom level 17, for example.
 	options:
 		minZoom: 0
 		maxZoom: 17
 		tms: yes
 		
-		# We are duplicating these default from TileLayer as they don't get inherited.
+		# We are duplicating these defaults from TileLayer as they don't get inherited.
 		subdomains: 'abc'
 		zoomOffset: 0
 	
@@ -16,8 +17,11 @@ L.WXTileLayer = L.TileLayer.extend
 		# Select the first field available
 		@setField @_config.fields[0], no
 		
+		# If we have a key globally shared use it.
+		if @_config.key?
+			@setKey @_config.key
 		# Select the closest future date if the key is a time dimension.
-		if @_config.keyistime
+		else if @_config.keyistime
 			now = new Date()
 			initialkey = null
 			for key in @_config.keys
@@ -34,6 +38,7 @@ L.WXTileLayer = L.TileLayer.extend
 
 	setKey: (key, noRedraw) ->
 		@_key = key
+		@_config.key = key
 		@redraw() if !noRedraw? or !noRedraw
 		@
 	
