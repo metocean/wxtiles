@@ -19,8 +19,13 @@
           <div id="jump_page">
             
               
-              <a class="source" href="leaflet.html">
-                leaflet.coffee
+              <a class="source" href="example.custom.html">
+                example.custom.coffee
+              </a>
+            
+              
+              <a class="source" href="example.leaflet.html">
+                example.leaflet.coffee
               </a>
             
               
@@ -31,6 +36,11 @@
               
               <a class="source" href="wxtiles.html">
                 wxtiles.coffee
+              </a>
+            
+              
+              <a class="source" href="wxtiles.leaflet.html">
+                wxtiles.leaflet.coffee
               </a>
             
           </div>
@@ -48,7 +58,7 @@
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
               <h1 id="leaflet-example">Leaflet Example</h1>
-<p>Using wxtiles on a leaflet map.</p>
+<p>Using wxtiles as a leaflet tilelayer.</p>
 
             </div>
             
@@ -92,13 +102,14 @@ domain = <span class="hljs-string">'metoceanview.com'</span></pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>All the keys are in config.keys. A key is an index into a list of tiles. For the base weather tiles all keys are times in the future. For other tile sets other keys are available.</p>
+              <p>We create the wxTileLayer. Our high quality tiles are available to zoom level 14 and our open tiles are available to zoom level 7.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-built_in">console</span>.log <span class="hljs-string">'KEYS'</span>
-	<span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> config.keys
-		<span class="hljs-built_in">console</span>.log <span class="hljs-string">"<span class="hljs-subst">#{key.name}</span>: <span class="hljs-subst">#{key.description}</span>"</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>	wxTilesLayer = L.wxTileLayer config,
+		<span class="hljs-attribute">maxZoom</span>: <span class="hljs-number">7</span>
+		<span class="hljs-attribute">maxNativeZoom</span>: <span class="hljs-number">8</span>
+		<span class="hljs-attribute">reuseTiles</span>: <span class="hljs-literal">yes</span></pre></div></div>
             
         </li>
         
@@ -109,13 +120,9 @@ domain = <span class="hljs-string">'metoceanview.com'</span></pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>All the fields are in config.fields. A field is a tracked variable such as sea surface temperature, wind 10m above sea, or precipitation.</p>
+              <p>detectRetina: yes</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>	<span class="hljs-built_in">console</span>.log <span class="hljs-string">'FIELDS'</span>
-	<span class="hljs-keyword">for</span> field <span class="hljs-keyword">in</span> config.fields
-		<span class="hljs-built_in">console</span>.log <span class="hljs-string">"<span class="hljs-subst">#{field.name}</span>: <span class="hljs-subst">#{field.description}</span>"</span></pre></div></div>
             
         </li>
         
@@ -126,15 +133,12 @@ domain = <span class="hljs-string">'metoceanview.com'</span></pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>For this example we are displaying a randomly selected field and starting with a key from the middle. Generally you would want to select the field that was relevant to your application and probably change the key based on a timeline or dropdown.</p>
+              <p>For this example we are displaying a randomly selected field. Generally you would want to select the field that was relevant to your application.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>	randomindex = Math.floor Math.random() * config.fields.length
-	field = config.fields[randomindex]
-	key = config.keys[Math.round(config.keys.length / <span class="hljs-number">2</span>)]
-	
-	<span class="hljs-built_in">console</span>.log <span class="hljs-string">"DISPLAYING <span class="hljs-subst">#{field.description}</span> @ <span class="hljs-subst">#{key.description}</span>"</span></pre></div></div>
+	wxTilesLayer.setField config.fields[randomindex]</pre></div></div>
             
         </li>
         
@@ -144,25 +148,6 @@ domain = <span class="hljs-string">'metoceanview.com'</span></pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <p>Like any leafletjs tile layer we create a specially crafted URL with the z, x, and y variables that leaflet uses to request tiles at specific coordinates and zoom levels. Our Y axis is inverted so use <code>tms: yes</code> to tell leaflet. Our high quality tiles are available to zoom level 14 and our open tiles are available to zoom level 7.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>	exampleLayer = L.tileLayer <span class="hljs-string">"<span class="hljs-subst">#{serverurl}</span>tile/<span class="hljs-subst">#{config.cycle}</span>/<span class="hljs-subst">#{field.name}</span>/<span class="hljs-subst">#{key.name}</span>/{z}/{x}/{y}.png"</span>,
-		<span class="hljs-attribute">opacity</span>: field.defaultalpha
-		<span class="hljs-attribute">maxZoom</span>: <span class="hljs-number">14</span>
-		<span class="hljs-attribute">tms</span>: <span class="hljs-literal">yes</span>
-		<span class="hljs-attribute">reuseTiles</span>: <span class="hljs-literal">yes</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>We’re using an example ocean tile layer from nzapstrike, this could be OpenStreetMap, MapBox or any other base tile provider.</p>
 
@@ -175,20 +160,34 @@ domain = <span class="hljs-string">'metoceanview.com'</span></pre></div></div>
         </li>
         
         
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>detectRetina: yes</p>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Once we’ve selected a field, key and created two tile layers we put them together and create a leaflet map centred over New Zealand.</p>
+              <p>Once we’ve created two tile layers we put them together and create a leaflet map centred over New Zealand.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>	map = <span class="hljs-keyword">new</span> L.Map <span class="hljs-string">'map'</span>,
-		<span class="hljs-attribute">layers</span>: [nzapstrike, exampleLayer]
+		<span class="hljs-attribute">layers</span>: [nzapstrike, wxTilesLayer]
 		<span class="hljs-attribute">center</span>: <span class="hljs-keyword">new</span> L.LatLng -<span class="hljs-number">37.7772</span>, <span class="hljs-number">175.2756</span>
-		<span class="hljs-attribute">zoom</span>: <span class="hljs-number">7</span></pre></div></div>
+		<span class="hljs-attribute">zoom</span>: <span class="hljs-number">6</span>
+		<span class="hljs-attribute">attributionControl</span>: <span class="hljs-literal">no</span></pre></div></div>
             
         </li>
         
@@ -199,9 +198,13 @@ domain = <span class="hljs-string">'metoceanview.com'</span></pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>This example is very much a roll your own example.</p>
+              <p>We can dynamically update the key by calling back, forward or setting a key directly.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>	setTimeout <span class="hljs-function">-&gt;</span>
+		wxTilesLayer.forward()
+	, <span class="hljs-number">10000</span></pre></div></div>
             
         </li>
         

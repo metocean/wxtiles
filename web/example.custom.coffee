@@ -1,5 +1,5 @@
-# # Leaflet Example
-# Using wxtiles on a leaflet map.
+# # Custom Example
+# Loading wxtiles manually.
 
 # There are several different wxservers, here we are selecting the open one.
 serverurl = 'http://localhost:8008/apikey/open/'
@@ -27,19 +27,23 @@ wxtiles.loadConfiguration serverurl, domain, (config) ->
 	# Like any leafletjs tile layer we create a specially crafted URL with the z, x, and y variables that leaflet uses to request tiles at specific coordinates and zoom levels. Our Y axis is inverted so use `tms: yes` to tell leaflet. Our high quality tiles are available to zoom level 14 and our open tiles are available to zoom level 7.
 	exampleLayer = L.tileLayer "#{serverurl}tile/#{config.cycle}/#{field.name}/#{key.name}/{z}/{x}/{y}.png",
 		opacity: field.defaultalpha
-		maxZoom: 14
+		maxZoom: 7
+		maxNativeZoom: 8
 		tms: yes
 		reuseTiles: yes
+		#detectRetina: yes
 	
 	# We're using an example ocean tile layer from nzapstrike, this could be OpenStreetMap, MapBox or any other base tile provider.
 	nzapstrike = L.tileLayer 'http://map{s}.nzapstrike.net/aqua3/{z}/{x}/{y}.png',
 		maxZoom: 8
 		reuseTiles: yes
+		#detectRetina: yes
 	
 	# Once we've selected a field, key and created two tile layers we put them together and create a leaflet map centred over New Zealand.
 	map = new L.Map 'map',
 		layers: [nzapstrike, exampleLayer]
 		center: new L.LatLng -37.7772, 175.2756
-		zoom: 7
+		zoom: 6
+		attributionControl: no
 	
 	# This example is very much a roll your own example.

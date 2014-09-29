@@ -19,8 +19,13 @@
           <div id="jump_page">
             
               
-              <a class="source" href="leaflet.html">
-                leaflet.coffee
+              <a class="source" href="example.custom.html">
+                example.custom.coffee
+              </a>
+            
+              
+              <a class="source" href="example.leaflet.html">
+                example.leaflet.coffee
               </a>
             
               
@@ -31,6 +36,11 @@
               
               <a class="source" href="wxtiles.html">
                 wxtiles.coffee
+              </a>
+            
+              
+              <a class="source" href="wxtiles.leaflet.html">
+                wxtiles.leaflet.coffee
               </a>
             
           </div>
@@ -110,8 +120,9 @@ tileservers = [
 ]
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">wxtiles</span></span>
-	<span class="hljs-attribute">loadConfiguration</span>: <span class="hljs-function"><span class="hljs-params">(serverurl, domain, cb)</span> =&gt;</span>
-		$.getJSON <span class="hljs-string">"<span class="hljs-subst">#{serverurl}</span>tile/init?domain=<span class="hljs-subst">#{domain}</span>&amp;callback=?"</span>, <span class="hljs-function"><span class="hljs-params">(data)</span> =&gt;</span>
+	<span class="hljs-attribute">loadConfiguration</span>: <span class="hljs-function"><span class="hljs-params">(url, domain, cb)</span> =&gt;</span>
+		host = url.replace <span class="hljs-regexp">/{s}/</span>, <span class="hljs-string">'a'</span>
+		$.getJSON <span class="hljs-string">"<span class="hljs-subst">#{host}</span>tile/init?domain=<span class="hljs-subst">#{domain}</span>&amp;callback=?"</span>, <span class="hljs-function"><span class="hljs-params">(data)</span> =&gt;</span>
 			keyset = []
 			keyistime = !data.timekey?
 <span class="hljs-function">			
@@ -128,6 +139,8 @@ tileservers = [
 						<span class="hljs-attribute">description</span>: data.timekey[k]
 			
 			result =
+				<span class="hljs-attribute">url</span>: url
+				<span class="hljs-attribute">domain</span>: domain
 				<span class="hljs-attribute">cycle</span>: data.cycle
 				<span class="hljs-attribute">fields</span>: <span class="hljs-keyword">for</span> name, description <span class="hljs-keyword">of</span> data.views
 					keyset = keyset.concat data.times[name]

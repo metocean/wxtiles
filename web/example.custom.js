@@ -25,7 +25,8 @@ wxtiles.loadConfiguration(serverurl, domain, function(config) {
   console.log("DISPLAYING " + field.description + " @ " + key.description);
   exampleLayer = L.tileLayer("" + serverurl + "tile/" + config.cycle + "/" + field.name + "/" + key.name + "/{z}/{x}/{y}.png", {
     opacity: field.defaultalpha,
-    maxZoom: 14,
+    maxZoom: 7,
+    maxNativeZoom: 8,
     tms: true,
     reuseTiles: true
   });
@@ -36,6 +37,7 @@ wxtiles.loadConfiguration(serverurl, domain, function(config) {
   return map = new L.Map('map', {
     layers: [nzapstrike, exampleLayer],
     center: new L.LatLng(-37.7772, 175.2756),
-    zoom: 7
+    zoom: 6,
+    attributionControl: false
   });
 });

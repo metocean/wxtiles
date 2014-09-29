@@ -94,8 +94,10 @@ wxtiles = (function() {
     this.loadConfiguration = __bind(this.loadConfiguration, this);
   }
 
-  wxtiles.prototype.loadConfiguration = function(serverurl, domain, cb) {
-    return $.getJSON("" + serverurl + "tile/init?domain=" + domain + "&callback=?", (function(_this) {
+  wxtiles.prototype.loadConfiguration = function(url, domain, cb) {
+    var host;
+    host = url.replace(/{s}/, 'a');
+    return $.getJSON("" + host + "tile/init?domain=" + domain + "&callback=?", (function(_this) {
       return function(data) {
         var description, keyistime, keyset, name, parseKeys, result;
         keyset = [];
@@ -127,6 +129,8 @@ wxtiles = (function() {
           }
         };
         result = {
+          url: url,
+          domain: domain,
           cycle: data.cycle,
           fields: (function() {
             var _ref, _results;

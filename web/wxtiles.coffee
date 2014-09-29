@@ -40,8 +40,9 @@ tileservers = [
 ]
 
 class wxtiles
-	loadConfiguration: (serverurl, domain, cb) =>
-		$.getJSON "#{serverurl}tile/init?domain=#{domain}&callback=?", (data) =>
+	loadConfiguration: (url, domain, cb) =>
+		host = url.replace /{s}/, 'a'
+		$.getJSON "#{host}tile/init?domain=#{domain}&callback=?", (data) =>
 			keyset = []
 			keyistime = !data.timekey?
 			
@@ -58,6 +59,8 @@ class wxtiles
 						description: data.timekey[k]
 			
 			result =
+				url: url
+				domain: domain
 				cycle: data.cycle
 				fields: for name, description of data.views
 					keyset = keyset.concat data.times[name]
