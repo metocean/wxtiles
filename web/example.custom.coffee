@@ -2,7 +2,7 @@
 # Loading wxtiles manually.
 
 # There are several different wxservers, here we are selecting the open one.
-serverurl = 'http://localhost:8008/apikey/open/'
+serverurl = 'http://api.thomas.dev/public/apikey/open/'
 domain = 'metoceanview.com'
 
 # We use wxtiles to load a configuration from the wxserver.
