@@ -1,4 +1,3 @@
-WXTiles
-=======
+# WXTiles
 
-WXTiles Javascript API
+WXTiles Javascript API.
