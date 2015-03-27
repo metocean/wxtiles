@@ -741,7 +741,7 @@ _WXColorBar = {
         if (!this.div) return;
         if (!aview) aview=this.cview;
         this.cview=aview;
-        if (aview=='none') {
+        if (aview=='none' || url == _WXROOTURL) {
             this.div.style.display='none';   
         }else{
             this.div.innerHTML='<img class="wxcolorbar" src="'+this.imurl.replace(/{v}/g,aview).replace(/{url}/g,url)+'" />';
@@ -877,7 +877,6 @@ else if (typeof(google)!="undefined"){
             return tile;
         },
         getTileUrl:function(pos, z) {
-            //if (!this.visible) return this.url+"none.png";        
             if (z >= this.minZoom && z <= this.maxZoom) {
                 //handle wrap around date line
                 var x = pos.x %(1<<z);
