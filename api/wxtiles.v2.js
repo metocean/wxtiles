@@ -839,6 +839,7 @@ if (typeof(OpenLayers)!="undefined"){
                     this.div.style.top=10+'px';
                 }
             }
+            this.div.style.backgroundColor = "rgba(255,255,255,0.7)";
             return this.div;
         },
         addToMap: function(map){
