@@ -759,7 +759,7 @@ if (typeof(OpenLayers)!="undefined"){
             _WXTiles.initialize.apply(this,[options]);
         },
         getURL: function(bounds){
-            if (!this.getVisibility()) return this.url+"none.png";
+            if (!this.getVisibility()) return this._url+"/images/none.png";
             var res = this.map.getResolution();
             var z = this.map.getZoom()+this.mapz0;
             if (z >= this.minZoom && z <= this.maxZoom) {
@@ -769,7 +769,7 @@ if (typeof(OpenLayers)!="undefined"){
               var y = Math.round((bounds.bottom - this.tileOrigin.lat) / (res * this.tileSize.h));
                  return this._srv+'/tile/'+this._cyclelist[this.cview]+"/"+this.cview+"/"+this.strtime+"/"+z + "/" + x + "/" + y + this.ext;
             } else {
-              return this.url+"none.png";
+              return this._url+"/images/none.png";
             }
         },
         _update: function(){
@@ -886,7 +886,7 @@ else if (typeof(google)!="undefined"){
                 var y=zmod-1-pos.y
                 return this._srv+'/tile/'+this._cyclelist[this.cview]+"/"+this.cview+"/"+this.strtime+"/"+z + "/" + x + "/" + y + this.ext;
             } else {
-              return this.url+"none.png";
+              return this._url+"/images/none.png";
             }
         },
         setVisibility: function(vis){
