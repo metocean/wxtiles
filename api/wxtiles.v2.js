@@ -163,7 +163,9 @@ _WXTiles = {
     this._url=this._url.replace(/\/$/, "")
     this._srv=this._url;
     this.lastinit=new Date();
-    this.callback='init'+this.lastinit.valueOf();
+    do {
+        this.callback='wxtilesinit' + Math.floor(Math.random() * 9007199254740992);
+    } while (typeof window[this.callback] === 'function');
     if (this.autoupdate){
         var inst=this;
         setInterval(function(){inst._loadinit()},600000);
