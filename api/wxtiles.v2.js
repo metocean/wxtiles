@@ -192,12 +192,17 @@ _WXTiles = {
     this.isinit=false;
     var oldscript=document.getElementById(this.callback);
     if (oldscript) document.body.removeChild(oldscript);
-    var script = document.createElement("script");
-    script.setAttribute("id",this.callback);
-    script.setAttribute("src",this._url+'/tile/init?callback='+this.callback+'&domain='+document.domain+'&'+Math.random());
-    script.setAttribute("type","text/javascript");
-    document.body.appendChild(script);
-    /**/
+
+    // adds jquery dependency, but needed for _checkinit
+    $.getScript( this._url+'/tile/init?callback='+this.callback+'&domain=localhost', $.proxy(this._checkinit, this) );
+  },
+  _checkinit: function(datalist) {
+     if (!this.isinit) {
+        // Sometimes the server errors 500 in the middle of returning the callback function.
+        // This seems to be always transient, so reinit when it happens.
+        console.log("RETRY", this);
+        this._loadinit();
+     }
   },
   _init: function(datalist){
     if (!this.isinit){
