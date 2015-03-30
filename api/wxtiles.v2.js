@@ -163,6 +163,7 @@ _WXTiles = {
     this._url=this._url.replace(/\/$/, "")
     this._srv=this._url;
     this.lastinit=new Date();
+    this._loadinitcount=0;
     do {
         this.callback='wxtilesinit' + Math.floor(Math.random() * 9007199254740992);
     } while (typeof window[this.callback] === 'function');
@@ -191,17 +192,37 @@ _WXTiles = {
     eval(this.callback+'=initfunc;');
     this.isinit=false;
     var oldscript=document.getElementById(this.callback);
-    if (oldscript) document.body.removeChild(oldscript);
+    if (oldscript) oldscript.parentNode.removeChild(oldscript);
+  
+    function getScript(source, callback) {
+        var script = document.createElement('script');
+        var prior = document.getElementsByTagName('script')[0];
+        script.async = 1;
+        script.id = this.callback;
+        prior.parentNode.insertBefore(script, prior);
 
-    // adds jquery dependency, but needed for _checkinit
-    $.getScript( this._url+'/tile/init?callback='+this.callback+'&domain=localhost', $.proxy(this._checkinit, this) );
+        script.onload = script.onreadystatechange = function( _, isAbort ) {
+            if(isAbort || !script.readyState || /loaded|complete/.test(script.readyState) ) {
+                script.onload = script.onreadystatechange = null;
+                script = undefined;
+
+                if(!isAbort) { if(callback) callback(); }
+            }
+        };
+
+        script.src = source;
+    }
+    getScript( this._url+'/tile/init?callback='+this.callback+'&domain='+window.location.hostname, this._checkinit.bind(this) );
   },
-  _checkinit: function(datalist) {
+  _checkinit: function() {
      if (!this.isinit) {
         // Sometimes the server errors 500 in the middle of returning the callback function.
         // This seems to be always transient, so reinit when it happens.
-        console.log("RETRY", this);
-        this._loadinit();
+        if (this._loadinitcount < 5) {
+            this._loadinitcount++;
+            console.log("RETRY", this._loadinitcount, this);
+            setTimeout(this._loadinit.bind(this), 50);
+        }
      }
   },
   _init: function(datalist){
