@@ -221,7 +221,7 @@ _WXTiles = {
         if (this._loadinitcount < 5) {
             this._loadinitcount++;
             console.log("RETRY", this._loadinitcount, this);
-            setTimeout(this._loadinit.bind(this), 50);
+            setTimeout(this._loadinit.bind(this), 1000);
         }
      }
   },
