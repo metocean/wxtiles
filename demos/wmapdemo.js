@@ -89,7 +89,7 @@ function loadTimes() {
 
 function getJSTime(t) {
     var nd=new Date(t);
-    return nd.format('%A %d %b %H:%M');
+    return nd.wxformat('%A %d %b %H:%M');
 }
 
 /*
