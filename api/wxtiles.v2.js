@@ -300,7 +300,7 @@ _WXTiles = {
     for (var i=0;i<this.times[this.cview].length;i++){
       if (this.times[this.cview][i]==this.ctime | this.times[this.cview][i]==-1) break;
     }
-    if (!this.hidden && i<this.times[this.cview].length){
+    if (this.cview && !this.hidden && i<this.times[this.cview].length){
       this.setVisibility(true);
     }else{
       this.setVisibility(false);
