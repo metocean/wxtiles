@@ -9,7 +9,7 @@ function add_ol_wxtiles(){
     };
     var map = new OpenLayers.Map('map', options);
 
-    var baselayer=new OpenLayers.Layer.Google( "GoogleMaps" , {isBaseLayer: true, 'sphericalMercator': true, 'wrapDateLine': true, 'nodeType':null,minZoomLevel:1,maxZoomLevel:7});
+    var baselayer=new OpenLayers.Layer.OSM();
 
     var satoverlay=new WXTiles({withnone:true,autoupdate:true,cview:'satir',vorder:['none','satir','satenh']});
     var wxoverlay=new WXTiles({withnone:true,autoupdate:true,cview:'rain',vorder:['rain','wind','tmp','hs','tp','sst']});
