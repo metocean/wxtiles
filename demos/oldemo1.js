@@ -11,7 +11,7 @@ function add_ol_wxtiles(){
 
     var baselayer=new OpenLayers.Layer.OSM();
 
-    var satoverlay=new WXTiles({withnone:true,autoupdate:true,cview:'satir',vorder:['none','satir','satenh']});
+    var satoverlay=new WXTiles({withnone:true,autoupdate:true,cview:'none',vorder:['none','satir','satenh']});
     var wxoverlay=new WXTiles({withnone:true,autoupdate:true,cview:'rain',vorder:['rain','wind','tmp','hs','tp','sst']});
     map.addLayers([baselayer]);
     wxoverlay.addToMap(map);
