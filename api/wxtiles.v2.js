@@ -66,7 +66,7 @@ function getNormalisedCoord(coord, zoom) {
   }
 
   return {x: x, y: y};
-}
+};
 
 extendTo = function(destination, source) {
     destination = destination || {};
