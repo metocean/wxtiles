@@ -929,7 +929,7 @@ else if (typeof(google)!="undefined"){
         },
         getTileUrl:function(pos, z) {
             if (z >= this.minZoom && z <= this.maxZoom) {
-                var normalisedCoord = getNormalisedCoord(pos, zoom);
+                var normalisedCoord = getNormalisedCoord(pos, z);
                 if (normalisedCoord === null) {
                   return this._url+"/images/none.png";
                 }
